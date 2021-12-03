@@ -50,8 +50,8 @@ func problemA(input []string) (gamma, epsilon int) {
 		epsilon <<= 1
 		// Check wether to increase gamma or epsilon.
 		most, least := mostAndLeastCommonByIndex(input, index)
-		gamma |= int(most)
-		epsilon |= int(least)
+		gamma |= int(most - '0')
+		epsilon |= int(least - '0')
 	}
 	return
 }
