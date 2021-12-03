@@ -14,14 +14,12 @@ func main() {
 	lines := readInputLines()
 
 	// What is the power consumption of the submarine?
-	if gamma, epsilon := problemA(lines); true {
-		fmt.Println(gamma * epsilon)
-	}
+	gamma, epsilon := problemA(lines)
+	fmt.Println(gamma * epsilon)
 
 	// Next, you should verify the life support rating.
-	if oxygen, scrubber := problemB(lines); true {
-		fmt.Println(oxygen * scrubber)
-	}
+	oxygen, scrubber := problemB(lines)
+	fmt.Println(oxygen * scrubber)
 }
 
 func readInputLines() (lines []string) {
@@ -94,17 +92,19 @@ func mostAndLeastCommonByIndex(input []string, index int) (rune, rune) {
 }
 
 func filterRating(lines []string, index int, useMostCommon bool) string {
+	most, least := mostAndLeastCommonByIndex(lines, index)
+	wanted := least
+	if useMostCommon {
+		wanted = most
+	}
+
 	filtered := make([]string, 0)
 	for _, line := range lines {
-		most, least := mostAndLeastCommonByIndex(lines, index)
-		wanted := least
-		if useMostCommon {
-			wanted = most
-		}
 		if rune(line[index]) == wanted {
 			filtered = append(filtered, line)
 		}
 	}
+
 	// As there is only one number left, stop.
 	if len(filtered) == 1 {
 		return filtered[0]
