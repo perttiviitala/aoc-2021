@@ -32,7 +32,17 @@ func readInputLines() (lines []Line) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		lines = append(lines, makeLine(scanner.Text()))
+		points := strings.Fields(scanner.Text())
+		start := strings.Split(points[0], ",")
+		end := strings.Split(points[2], ",")
+		x1, _ := strconv.Atoi(string(start[0]))
+		y1, _ := strconv.Atoi(string(start[1]))
+		x2, _ := strconv.Atoi(string(end[0]))
+		y2, _ := strconv.Atoi(string(end[1]))
+		lines = append(lines, Line{
+			Point{x1, y1},
+			Point{x2, y2},
+		})
 	}
 	return
 }
@@ -109,7 +119,7 @@ func (grid *Grid) OverlapCount() (counter int) {
 }
 
 func makeGrid(lines []Line) Grid {
-	maxX, maxY := 0
+	maxX, maxY := 0, 0
 	for _, line := range lines {
 		if _, x := minMaxInts(line.start.x, line.end.x); x > maxX {
 			maxX = x
@@ -123,27 +133,6 @@ func makeGrid(lines []Line) Grid {
 		grid.values[i] = make([]int, maxX+1)
 	}
 	return grid
-}
-
-func makeLine(line string) Line {
-	sides := strings.Fields(line)
-	return Line{
-		makePoint(sides[0]),
-		makePoint(sides[2]),
-	}
-}
-
-func makePoint(pair string) Point {
-	cords := strings.Split(pair, ",")
-	x, err := strconv.Atoi(string(cords[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	y, err := strconv.Atoi(string(cords[1]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	return Point{x, y}
 }
 
 func minMaxInts(a, b int) (int, int) {
