@@ -23,7 +23,7 @@ func main() {
 	fmt.Println(problemB(lines))
 }
 
-func readInputLines() (lines []string) {
+func readInputLines() (lines []Line) {
 	file, err := os.Open("input/day5.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -32,26 +32,13 @@ func readInputLines() (lines []string) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		lines = append(lines, makeLine(scanner.Text()))
 	}
 	return
 }
 
 type Point struct {
 	x, y int
-}
-
-func makePoint(pair string) Point {
-	cords := strings.Split(pair, ",")
-	x, err := strconv.Atoi(string(cords[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	y, err := strconv.Atoi(string(cords[1]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	return Point{x, y}
 }
 
 type Line struct {
@@ -100,24 +87,8 @@ func (line *Line) Points() (points []Point) {
 	return
 }
 
-func makeLine(line string) Line {
-	sides := strings.Fields(line)
-	return Line{
-		makePoint(sides[0]),
-		makePoint(sides[2]),
-	}
-}
-
 type Grid struct {
 	values [][]int
-}
-
-func makeGrid(size int) Grid {
-	grid := Grid{make([][]int, size)}
-	for i := range grid.values {
-		grid.values[i] = make([]int, size)
-	}
-	return grid
 }
 
 func (grid *Grid) MarkPath(line Line) {
@@ -137,6 +108,44 @@ func (grid *Grid) OverlapCount() (counter int) {
 	return
 }
 
+func makeGrid(lines []Line) Grid {
+	maxX, maxY := 0
+	for _, line := range lines {
+		if _, x := minMaxInts(line.start.x, line.end.x); x > maxX {
+			maxX = x
+		}
+		if _, y := minMaxInts(line.start.y, line.end.y); y > maxY {
+			maxY = y
+		}
+	}
+	grid := Grid{make([][]int, maxY+1)}
+	for i := range grid.values {
+		grid.values[i] = make([]int, maxX+1)
+	}
+	return grid
+}
+
+func makeLine(line string) Line {
+	sides := strings.Fields(line)
+	return Line{
+		makePoint(sides[0]),
+		makePoint(sides[2]),
+	}
+}
+
+func makePoint(pair string) Point {
+	cords := strings.Split(pair, ",")
+	x, err := strconv.Atoi(string(cords[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	y, err := strconv.Atoi(string(cords[1]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return Point{x, y}
+}
+
 func minMaxInts(a, b int) (int, int) {
 	if a < b {
 		return a, b
@@ -144,22 +153,20 @@ func minMaxInts(a, b int) (int, int) {
 	return b, a
 }
 
-func problemA(input []string) int {
-	grid := makeGrid(1000)
-	for _, line := range input {
-		ventLine := makeLine(line)
-		if ventLine.IsStraight() {
-			grid.MarkPath(ventLine)
+func problemA(lines []Line) int {
+	grid := makeGrid(lines)
+	for _, line := range lines {
+		if line.IsStraight() {
+			grid.MarkPath(line)
 		}
 	}
 	return grid.OverlapCount()
 }
 
-func problemB(input []string) int {
-	grid := makeGrid(1000)
-	for _, line := range input {
-		ventLine := makeLine(line)
-		grid.MarkPath(ventLine)
+func problemB(lines []Line) int {
+	grid := makeGrid(lines)
+	for _, line := range lines {
+		grid.MarkPath(line)
 	}
 	return grid.OverlapCount()
 }
