@@ -66,28 +66,23 @@ func (line *Line) Points() (points []Point) {
 		}
 		return
 	}
-	// There has to be a better way!
 	x1, x2 := line.start.x, line.end.x
 	y1, y2 := line.start.y, line.end.y
-	if x1 > x2 {
-		if y1 > y2 {
-			for x, y := x1, y1; x >= x2 && y >= y2; x, y = x-1, y-1 {
-				points = append(points, Point{x, y})
-			}
-		} else {
-			for x, y := x1, y1; x >= x2 && y <= y2; x, y = x-1, y+1 {
-				points = append(points, Point{x, y})
-			}
+	if x1 > x2 && y1 > y2 {
+		for i := 0; i <= x1-x2; i++ {
+			points = append(points, Point{x1 - i, y1 - i})
 		}
-	} else {
-		if y1 > y2 {
-			for x, y := x1, y1; x <= x2 && y >= y2; x, y = x+1, y-1 {
-				points = append(points, Point{x, y})
-			}
-		} else {
-			for x, y := x1, y1; x <= x2 && y <= y2; x, y = x+1, y+1 {
-				points = append(points, Point{x, y})
-			}
+	} else if x1 > x2 && y1 < y2 {
+		for i := 0; i <= x1-x2; i++ {
+			points = append(points, Point{x1 - i, y1 + i})
+		}
+	} else if x1 < x2 && y1 > y2 {
+		for i := 0; i <= x2-x1; i++ {
+			points = append(points, Point{x1 + i, y1 - i})
+		}
+	} else if x1 < x2 && y1 < y2 {
+		for i := 0; i <= x2-x1; i++ {
+			points = append(points, Point{x1 + i, y1 + i})
 		}
 	}
 	return
