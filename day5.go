@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
-	"strings"
 )
 
 func main() {
@@ -32,13 +30,11 @@ func readInputLines() (lines []Line) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		points := strings.Fields(scanner.Text())
-		start := strings.Split(points[0], ",")
-		end := strings.Split(points[2], ",")
-		x1, _ := strconv.Atoi(string(start[0]))
-		y1, _ := strconv.Atoi(string(start[1]))
-		x2, _ := strconv.Atoi(string(end[0]))
-		y2, _ := strconv.Atoi(string(end[1]))
+		var x1, y1, x2, y2 int
+		_, err := fmt.Sscanf(scanner.Text(), "%d,%d -> %d,%d", &x1, &y1, &x2, &y2)
+		if err != nil {
+			log.Fatal(err)
+		}
 		lines = append(lines, Line{
 			Point{x1, y1},
 			Point{x2, y2},
