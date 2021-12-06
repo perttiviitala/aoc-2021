@@ -110,18 +110,18 @@ func (grid *Grid) OverlapCount() (counter int) {
 }
 
 func makeGrid(lines []Line) Grid {
-	maxX, maxY := 0, 0
+	max := 0
 	for _, line := range lines {
-		if _, x := minMaxInts(line.start.x, line.end.x); x > maxX {
-			maxX = x
+		if _, x := minMaxInts(line.start.x, line.end.x); x > max {
+			max = x
 		}
-		if _, y := minMaxInts(line.start.y, line.end.y); y > maxY {
-			maxY = y
+		if _, y := minMaxInts(line.start.y, line.end.y); y > max {
+			max = y
 		}
 	}
-	grid := Grid{make([][]int, maxY+1)}
+	grid := Grid{make([][]int, max+1)}
 	for i := range grid.values {
-		grid.values[i] = make([]int, maxX+1)
+		grid.values[i] = make([]int, max+1)
 	}
 	return grid
 }
