@@ -49,15 +49,13 @@ func problemA(positions []int) int {
 			sums[i] += int(math.Abs(float64(position - i)))
 		}
 	}
-	minIndex := 0
-	minSum := 0
-	for i, sum := range sums {
-		if minSum == 0 || sum < minSum {
-			minSum = sum
-			minIndex = i
+	min := 0
+	for _, sum := range sums {
+		if min == 0 || sum < min {
+			min = sum
 		}
 	}
-	return sums[minIndex]
+	return min
 }
 
 func problemB(positions []int) int {
@@ -74,13 +72,11 @@ func problemB(positions []int) int {
 			sums[i] += distance * (distance + 1) / 2
 		}
 	}
-	minIndex := 0
-	minSum := 0
-	for i, sum := range sums {
-		if minSum == 0 || sum < minSum {
-			minSum = sum
-			minIndex = i
+	min := 0
+	for _, sum := range sums {
+		if min == 0 || sum < min {
+			min = sum
 		}
 	}
-	return sums[minIndex]
+	return min
 }
